@@ -11,14 +11,17 @@ namespace OpenGL_SAPR
         public static void DrawLine3D(SharpGL.OpenGL gl, float startX, float startY, float startZ,
                                                          float endX, float endY, float endZ, System.Drawing.Color lineColor)
         {
-            gl.Begin(SharpGL.OpenGL.GL_LINES);
             float cR = lineColor.R / 255.0f;
             float cG = lineColor.G / 255.0f;
             float cB = lineColor.B / 255.0f;
             gl.Color(cR, cG, cB);
+
+            gl.Begin(SharpGL.OpenGL.GL_LINES);
             gl.Vertex(startX, startY, startZ);
             gl.Vertex(endX, endY, endZ);
             gl.End();
+
+            
         }
 
         public static void DrawAxis3D(SharpGL.OpenGL gl, 
@@ -57,6 +60,8 @@ namespace OpenGL_SAPR
                            offsetX, offsetY, offsetZ + maxZvalue, System.Drawing.Color.Navy);
             DrawLine3D(gl, offsetX, offsetY - (capSize / 3), offsetZ + maxZvalue - capSize,
                            offsetX, offsetY, offsetZ + maxZvalue, System.Drawing.Color.Navy);
+
+            gl.Flush();
         }
 
         public static void DrawBackground(SharpGL.OpenGL gl)
@@ -72,6 +77,8 @@ namespace OpenGL_SAPR
             gl.Vertex(-500, -30, -50f);
 
             gl.End();
+
+            gl.Flush();
         }
 
         public static void DrawPiram(SharpGL.OpenGL gl, float width, float height, float depth,
@@ -86,20 +93,27 @@ namespace OpenGL_SAPR
             gl.Vertex(0.0f, height, 0.0f);
             gl.Vertex(width / 2, 0f, depth / 2);
             gl.Vertex(-width / 2, 0f, depth / 2);
+            gl.End();
 
+            gl.Begin(SharpGL.OpenGL.GL_TRIANGLES);
             gl.Vertex(0.0f, height, 0.0f);
             gl.Vertex(width / 2,  0f, -depth / 2);
             gl.Vertex(width / 2, 0f, depth / 2);
+            gl.End();
 
+            gl.Begin(SharpGL.OpenGL.GL_TRIANGLES);
             gl.Vertex(0.0f, height, 0.0f);
             gl.Vertex(-width / 2, 0f, -depth / 2);
             gl.Vertex(width / 2, 0f, -depth / 2);
+            gl.End();
 
+            gl.Begin(SharpGL.OpenGL.GL_TRIANGLES);
             gl.Vertex(0.0f, height, 0.0f);
             gl.Vertex(-width / 2, 0f, depth / 2);
             gl.Vertex(-width / 2, 0f, -depth / 2);
             gl.End();
 
+            
             gl.Begin(SharpGL.OpenGL.GL_QUADS);
             gl.Vertex(-width / 2, 0.0f, depth / 2);
             gl.Vertex(width / 2, 0.0f, depth / 2);
@@ -134,7 +148,9 @@ namespace OpenGL_SAPR
             gl.Vertex(0.0f, height, 0.0f);
             gl.Vertex(-width / 2, 0f, depth / 2);
             gl.Vertex(-width / 2, 0f, -depth / 2);
-            gl.End();            
+            gl.End();
+
+            gl.Flush();
         }
 
         public static void DrawSolids(SharpGL.OpenGL gl)
@@ -151,6 +167,8 @@ namespace OpenGL_SAPR
                 DrawLine3D(gl, 0, 0, gap, total_cells * cell_size, 0, gap, System.Drawing.Color.Red);
                 DrawLine3D(gl, gap, 0, 0, gap, 0, total_cells * cell_size, System.Drawing.Color.Red);
             }
+
+            gl.Flush();
         }
 
         public static void DrawBox(SharpGL.OpenGL gl, float width, float height, float depth,
@@ -249,13 +267,15 @@ namespace OpenGL_SAPR
             gl.Vertex(0.0f, -height / 2, -depth / 2);
             gl.Vertex(width, -height / 2, -depth / 2);
             gl.End();
+
+            gl.Flush();
         }
 
 
         public static void DrawCylinder(SharpGL.OpenGL gl, float diameter1, float diameter2, float height,
                                         System.Drawing.Color polygonColor, System.Drawing.Color lineColor)
         {
-            int ng = 12;
+            int ng = 32;
 
             List<Tuple<float, float>> list1 = new List<Tuple<float, float>>();
             List<Tuple<float, float>> list2 = new List<Tuple<float, float>>();
@@ -292,15 +312,17 @@ namespace OpenGL_SAPR
             }
             gl.End();
 
-            gl.Begin(SharpGL.OpenGL.GL_QUADS);
+            
             for (int i = 0; i < list1.Count - 1; i++)
             {
+                gl.Begin(SharpGL.OpenGL.GL_QUADS);
                 gl.Vertex(list1[i].Item1, 0f, list1[i].Item2);
                 gl.Vertex(list2[i].Item1, height, list2[i].Item2);
                 gl.Vertex(list2[i+1].Item1, height, list2[i+1].Item2);
                 gl.Vertex(list1[i+1].Item1, 0f, list1[i+1].Item2);
+                gl.End();
             }
-            gl.End();
+           
 
 
             float lR = lineColor.R / 255.0f;
@@ -322,16 +344,18 @@ namespace OpenGL_SAPR
             }
             gl.End();
 
-            gl.Begin(SharpGL.OpenGL.GL_LINE_LOOP);
+            
             for (int i = 0; i < list1.Count - 1; i++)
             {
+                gl.Begin(SharpGL.OpenGL.GL_LINE_LOOP);
                 gl.Vertex(list1[i].Item1, 0f, list1[i].Item2);
                 gl.Vertex(list2[i].Item1, height, list2[i].Item2);
                 gl.Vertex(list2[i + 1].Item1, height, list2[i + 1].Item2);
                 gl.Vertex(list1[i + 1].Item1, 0f, list1[i + 1].Item2);
+                gl.End();
             }
-            gl.End();
 
+            gl.Flush();
         }
 
         public static void DrawSphere(SharpGL.OpenGL gl, float diameter, System.Drawing.Color polygonColor, System.Drawing.Color lineColor)
@@ -396,6 +420,8 @@ namespace OpenGL_SAPR
                     gl.End();
                 }
             }
+
+            gl.Flush();
         }
     }
 }

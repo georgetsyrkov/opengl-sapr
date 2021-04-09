@@ -46,7 +46,7 @@ namespace OpenGL_SAPR
             //gl.ClearColor(1f, 1f, 1f, 1f);
             gl.LoadIdentity();
 
-            
+            //gl.Enable(SharpGL.OpenGL.GL_LINE_SMOOTH);
 
             gl.Translate(0.0f, 0.0f, -12.0f);
 
@@ -65,7 +65,20 @@ namespace OpenGL_SAPR
 
             if (doDrawDefault)
             {
-                //GLHelper.DrawNet(gl, 100, 5);
+                //X-Z
+                GLHelper.DrawNet(gl, 100, 5);
+
+                //X-Y
+                gl.PushMatrix();
+                gl.Rotate(-90, 1.0f, 0.0f, 0.0f);
+                GLHelper.DrawNet(gl, 100, 5);
+                gl.PopMatrix();
+
+                //X-Y
+                gl.PushMatrix();
+                gl.Rotate(90, 0.0f, 0.0f, 1.0f);
+                GLHelper.DrawNet(gl, 100, 5);
+                gl.PopMatrix();
             }
 
             if (doDrawAxis)
@@ -91,7 +104,7 @@ namespace OpenGL_SAPR
                 gl.Translate(0.0f, 8.0f, 0.0f);
                 GLHelper.DrawCylinder(gl, 5, 1, 4, Color.Chocolate, Color.Red);
 
-                gl.Translate(0.0f, 5.0f, 0.0f);
+                gl.Translate(0.0f, 7.0f, 0.0f);
                 GLHelper.DrawSphere(gl, 3, Color.LightBlue, Color.Blue);
             }
 
