@@ -33,6 +33,8 @@ namespace OpenGL_SAPR
         private bool doDrawDefault = false;
         private bool doDrawSolids = false;
 
+        private List<float[,]> _stlData = new List<float[,]>();
+
         public Form1()
         {
             InitializeComponent();
@@ -90,6 +92,8 @@ namespace OpenGL_SAPR
                                         3, 1);
             }
 
+            GLHelper.DrawSTL(gl, this._stlData, 0.1f, Color.Green, Color.Yellow);
+
             if (doDrawSolids)
             {
                 //...
@@ -107,6 +111,8 @@ namespace OpenGL_SAPR
                 gl.Translate(0.0f, 7.0f, 0.0f);
                 GLHelper.DrawSphere(gl, 3, Color.LightBlue, Color.Blue);
             }
+
+            
 
             gl.LoadIdentity();
         }
@@ -182,6 +188,50 @@ namespace OpenGL_SAPR
             lll += $"{ttt[5]}{System.Environment.NewLine}";
 
             MessageBox.Show(lll);
+        }
+
+        private void button_STL_Click(object sender, EventArgs e)
+        {
+            this._stlData.Clear();
+
+            OpenFileDialog ofd = new OpenFileDialog();
+            var res = ofd.ShowDialog();
+            if (res != DialogResult.Cancel)
+            {
+                System.IO.FileInfo fi = new System.IO.FileInfo(ofd.FileName);
+                if (fi.Exists)
+                {
+                    byte[] stlbinbytes = System.IO.File.ReadAllBytes(ofd.FileName);
+                    if (stlbinbytes.Length > 0)
+                    {
+                        int tri_count = BitConverter.ToInt32(stlbinbytes, 80);
+
+                        int oneRecordInBytes = 50;
+                        int byteStart = 84;
+
+                        for (int i = 0; i < tri_count; i++)
+                        {
+                            int sByte = byteStart + (i * oneRecordInBytes);
+
+                            float[,] tr = new float[3, 3];
+
+                            tr[0, 0] = BitConverter.ToSingle(stlbinbytes, sByte + 12);
+                            tr[0, 1] = BitConverter.ToSingle(stlbinbytes, sByte + 16);
+                            tr[0, 2] = BitConverter.ToSingle(stlbinbytes, sByte + 20);
+
+                            tr[1, 0] = BitConverter.ToSingle(stlbinbytes, sByte + 24);
+                            tr[1, 1] = BitConverter.ToSingle(stlbinbytes, sByte + 28);
+                            tr[1, 2] = BitConverter.ToSingle(stlbinbytes, sByte + 32);
+
+                            tr[2, 0] = BitConverter.ToSingle(stlbinbytes, sByte + 36);
+                            tr[2, 1] = BitConverter.ToSingle(stlbinbytes, sByte + 40);
+                            tr[2, 2] = BitConverter.ToSingle(stlbinbytes, sByte + 44);
+
+                            this._stlData.Add(tr);
+                        }
+                    }
+                }
+            }
         }
     }
 }

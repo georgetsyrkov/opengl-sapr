@@ -423,5 +423,40 @@ namespace OpenGL_SAPR
 
             gl.Flush();
         }
+
+        public static void DrawSTL(SharpGL.OpenGL gl, List<float[,]> stlData, float scale, System.Drawing.Color polygonColor, System.Drawing.Color lineColor)
+        {
+            if (stlData.Count <= 0) { return; }
+
+            for (int i = 0; i < stlData.Count; i++)
+            {
+                float pR = polygonColor.R / 255.0f;
+                float pG = polygonColor.G / 255.0f;
+                float pB = polygonColor.B / 255.0f;
+                gl.Color(pR, pG, pB);
+
+                gl.Begin(SharpGL.Enumerations.BeginMode.Polygon);
+                gl.Vertex(stlData[i][0, 0] * scale, stlData[i][0, 1] * scale, stlData[i][0, 2] * scale);
+                gl.Vertex(stlData[i][1, 0] * scale, stlData[i][1, 1] * scale, stlData[i][1, 2] * scale);
+                gl.Vertex(stlData[i][2, 0] * scale, stlData[i][2, 1] * scale, stlData[i][2, 2] * scale);
+                gl.End();
+            }
+
+            for (int i = 0; i < stlData.Count; i++)
+            {
+                float lR = lineColor.R / 255.0f;
+                float lG = lineColor.G / 255.0f;
+                float lB = lineColor.B / 255.0f;
+                gl.Color(lR, lG, lB);
+
+                gl.Begin(SharpGL.OpenGL.GL_LINE_LOOP);
+                gl.Vertex(stlData[i][0, 0] * scale, stlData[i][0, 1] * scale, stlData[i][0, 2] * scale);
+                gl.Vertex(stlData[i][1, 0] * scale, stlData[i][1, 1] * scale, stlData[i][1, 2] * scale);
+                gl.Vertex(stlData[i][2, 0] * scale, stlData[i][2, 1] * scale, stlData[i][2, 2] * scale);
+                gl.End();
+            }
+
+            gl.Flush();
+        }
     }
 }
